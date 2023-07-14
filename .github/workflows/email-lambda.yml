@@ -1,0 +1,29 @@
+name: Invoke email Lambda
+on:
+  workflow_dispatch:
+    inputs:
+      subject:
+        description: "Subject for email"
+        required: true
+        default: "Test Subject"
+      body:
+        description: "Body for email"
+        required: true
+        default: "Test Body"
+
+jobs:
+  trigger-email:
+    name: Trigger an Email
+    runs-on: ubuntu-latest
+    steps:
+      - name: invoke
+        uses: gagoar/invoke-aws-lambda@master
+        with:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          FunctionName: emailBack
+          Payload: |
+            { 
+              "subject": "${{ inputs.subject }}", 
+              "body": " ${{ inputs.body }}" 
+            }
